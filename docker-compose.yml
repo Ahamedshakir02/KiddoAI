@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Secure Backend AI Proxy Service
+  backend:
+    build: ./backend
+    container_name: joy-ai-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    restart: unless-stopped
+
+  # Responsive Frontend SPA Service
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_BACKEND_URL=http://localhost:5000
+    container_name: joy-ai-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
